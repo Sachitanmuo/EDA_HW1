@@ -17,7 +17,7 @@ Node(char v, Node* l, Node* h) : var(v), low(l), high(h);
 class BDD{
 private:
     Node* root;
-    unordered_map<char, Node> variables;
+    unordered_map<char, Node*> variables;
     vector<Node*> points;
     string equations;
     vector<string> ordering;
