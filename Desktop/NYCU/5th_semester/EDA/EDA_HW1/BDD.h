@@ -26,7 +26,8 @@ private:
     Node* v0;
     Node* v1;
     int node_count;
-    //int node_count = 0;
+    bool one = false;
+    bool zero = false;
 public:
     BDD(string& eq, vector<string> ord): equations(eq), ordering(ord){
         v0 = new Node('0',nullptr, nullptr);

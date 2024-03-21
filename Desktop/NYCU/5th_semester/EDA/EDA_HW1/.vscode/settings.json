@@ -1,0 +1,22 @@
+{
+    "files.associations": {
+        "array": "cpp",
+        "tuple": "cpp",
+        "variant": "cpp",
+        "__config": "cpp",
+        "__hash_table": "cpp",
+        "charconv": "cpp",
+        "complex": "cpp",
+        "fstream": "cpp",
+        "istream": "cpp",
+        "locale": "cpp",
+        "memory": "cpp",
+        "ostream": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "string": "cpp",
+        "__split_buffer": "cpp",
+        "iterator": "cpp",
+        "string_view": "cpp"
+    }
+}

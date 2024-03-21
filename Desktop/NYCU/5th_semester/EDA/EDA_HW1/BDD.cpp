@@ -12,8 +12,14 @@ Node* BDD::BDD_Build(const string &equation, const string &ordering, int idx, in
     char complement = isupper(variable)? tolower(variable):toupper(variable);
     bool exist = false;
     //Terminal case:
-    if(equation == "1") {std::cout << "v1" <<endl; return get_v1(); }
-    if(equation == "0") {std::cout << "v0" <<endl; return get_v0(); }
+    if(equation == "1") {
+        std::cout << "v1" <<endl;
+        one = true;
+        return get_v1(); }
+    if(equation == "0") {
+        std::cout << "v0" <<endl;
+        zero = true;
+        return get_v0(); }
     for(int i = 0; i < equations.size() ; i++){
         if(equations[i] == variable || equations[i] == complement) exist = true;
     }
@@ -43,7 +49,7 @@ Node* BDD::BDD_Build(const string &equation, const string &ordering, int idx, in
                 temp = tokens[i].erase(j, 1);
             } 
         }
-        if(!hasVariable && ! hasComplement){
+        if((!hasVariable && ! hasComplement)){
             phi += tokens[i] + "+";
             phi_bar += tokens[i] + "+";
         }
@@ -51,14 +57,14 @@ Node* BDD::BDD_Build(const string &equation, const string &ordering, int idx, in
         else if(!hasComplement) phi += temp + "+";
     }
     //erase the "+" at the end
+    if(phi[0] == '+') phi.erase(0,1);
+    if(phi_bar[0] == '+') phi_bar.erase(0,1);
     if(!phi.empty()) phi.erase(phi.size()-1);
     if(!phi_bar.empty()) phi_bar.erase(phi_bar.size()-1);
     if(phi_one) phi = "1";
-    if(phi_bar_one) phi_bar = "0";
-    if(phi.empty()) phi ="1";
+    if(phi_bar_one) phi_bar = "1";
+    if(phi.empty()) phi = "0";
     if(phi_bar.empty()) phi_bar = "0";
-    if(phi[0] == '+') phi.erase(0,1);
-    if(phi_bar[0] == '+') phi_bar.erase(0,1);
     std::cout << "high: BDD_Build( " << phi     << ", " << variable << ", " << idx << ", " << iteration + 1 << " )" << endl;
     high = BDD_Build(phi, ordering, idx, iteration+1);
     std::cout << "low: BDD_Build( " << phi_bar << ", " << variable << ", " << idx << ", " << iteration + 1 << " )" << endl;
@@ -75,6 +81,13 @@ Node* BDD::BDD_Build(const string &equation, const string &ordering, int idx, in
 }
 
 Node* BDD::old_or_new(char var, Node *high, Node *low){
+    if(var == '1'){
+        one = true;
+    }
+    if(var =='0'){
+        zero = true;
+    }
+
     for(int i = 0; i < points.size(); i++){
         if(var == points[i]->var && *high == *(points[i]->high) && *low == *(points[i]->low)){
             cout << "The point " << var << " already exists.";
@@ -104,9 +117,12 @@ int BDD::process(){
     int min = INT_MAX;
     int max = INT_MIN;
     for(int i = 0 ; i < ordering.size() ; i++){
-        node_count = 2; //including v0 and v1
+        node_count = 0; //including v0 and v1
+        zero = false;
+        one = false;
         points.clear();
         BDD_Build(equations, ordering[i], 0, 1);
+        node_count += zero + one;
         node_counts.push_back(node_count);
         if(node_count < min) min = node_count;
         if(node_count > max) max = node_count;
